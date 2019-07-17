@@ -6,11 +6,11 @@ export default class userRequests {
     //     method: 'GET'
     // });
 
-    static auth = (user: any) => fetch(`${url}authenticate`, {
+    static auth = (user: any) => { return fetch(`${url}authenticate`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(user)
-    }).then(data => console.log(data));
+    })};
 
     // static delete = id => fetch(`${url}todos/${id}`, {
     //     method: 'DELETE'

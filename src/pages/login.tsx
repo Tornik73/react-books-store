@@ -1,14 +1,15 @@
 import React from 'react'
-// import { LoginState, LoginResult, LoginRequest } from "";
-
 import styled from 'styled-components';
 import requests from '../requests/loginRequests'
-
 type MyProps = { email: string, password: string };
 
-type MyState = { email: string, password: string};
+type MyState = { email: string, password: string };
 
-export class LoginComponent extends React.Component<MyProps, MyState> {
+
+
+
+export class LoginComponent extends React.Component<MyProps, MyState, History> {
+
     constructor(props:any) {
         super(props);
         this.state = {
@@ -19,7 +20,9 @@ export class LoginComponent extends React.Component<MyProps, MyState> {
 
     onSubmit = (event:any) => {
         event.preventDefault();
-        requests.auth(this.state);
+        // window.location.href = '/';
+        requests.auth(this.state).then(x => console.log(x));
+        //history.push('register')
     };
     
     validateForm() {
@@ -58,7 +61,9 @@ export class LoginComponent extends React.Component<MyProps, MyState> {
                         <div>
                             <button disabled={!this.validateForm()} type="submit">
                                 Login
-                        </button>
+                                
+                            </button>
+                           
                         </div>
                     </form>
                 </div>
@@ -67,6 +72,7 @@ export class LoginComponent extends React.Component<MyProps, MyState> {
     }
 }
 export default LoginComponent;
+
 
 const LoginContent = styled('article')`
     max-width: 1000px;
