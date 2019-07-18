@@ -4,7 +4,7 @@ import { RegisterState, RegisterActionTypes } from './types'
 export const initialState: RegisterState = {
   data: [],
   errors: undefined,
-  loading: false
+  loading: false,
 }
 
 const reducer: Reducer<RegisterState> = (state = initialState, action) => {

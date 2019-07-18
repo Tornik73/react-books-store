@@ -7,9 +7,9 @@ import { ApplicationState, ConnectedReduxProps } from '../store';
 import { fetchRequest } from '../store/Books/actions';
 import { Books } from '../store/Books/types'
 import { connect } from 'react-redux';
+import { AddToCart } from '../store/CartCounter/actions'
 
-
-type State = { email: string, password: string, telephone: string, age: string, img: string };
+type State = { email: string, password: string, telephone: string, age: string, img: string, count: number };
 
 interface PropsFromState {
   loading: boolean
@@ -17,10 +17,11 @@ interface PropsFromState {
   errors?: string
 }
 
-
 interface PropsFromDispatch {
   fetchRequest: typeof fetchRequest
+  AddToCart: typeof AddToCart
 }
+
 type AllProps = PropsFromState & PropsFromDispatch & ConnectedReduxProps & { email: string, password: string }
 
 class MainComponent extends React.Component<AllProps, State> {
@@ -34,16 +35,20 @@ class MainComponent extends React.Component<AllProps, State> {
       <Wrapper>
         <h2>Our Books</h2>
         <PageContent>
-          {this.renderData()}
+          { this.renderData() }
         </PageContent >
       </Wrapper>
     )
   }
 
+  AddToCart = () =>{
+    this.props.AddToCart();
+  }
+
   private renderData() {
 
     const { data } = this.props;
-    
+
     return (
       data.map(book => (
         <BookContent key={book.id}>
@@ -52,13 +57,29 @@ class MainComponent extends React.Component<AllProps, State> {
             <div>Author: {book.author}</div>
             <div>Description: {book.description}</div>
             <div>Price: {book.price}</div>
-            <button>Add to cart</button>
+            <button onClick={this.AddToCart}>Add to cart</button>
         </BookContent>
 
       ))
     )
   }      
 }
+const mapStateToProps = ({ books }: ApplicationState, state: any) => ({
+  loading: books.loading,
+  errors: books.errors,
+  data: books.data,
+  count: state.count
+})
+
+const mapDispatchToProps = {
+  AddToCart,
+  fetchRequest
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MainComponent)
 
 const Wrapper = styled('div')`
   text-align: center;
@@ -99,21 +120,3 @@ const PageContent = styled('article')`
     line-height: 1.25;
   }
 `
-const mapStateToProps = ({ books }: ApplicationState) => ({
-  loading: books.loading,
-  errors: books.errors,
-  data: books.data
-})
-
-// mapDispatchToProps is especially useful for constraining our actions to the connected component.
-// You can access these via `this.props`.
-const mapDispatchToProps = {
-  fetchRequest
-}
-
-// Now let's connect our component!
-// With redux v4's improved typings, we can finally omit generics here.
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MainComponent)

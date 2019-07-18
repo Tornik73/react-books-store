@@ -23,24 +23,6 @@ function* handleFetch(data: any) {
   }
 }
 
-// function* handleSelect(action: ReturnType<typeof selectTeam>) {
-//   try {
-//     const detail = yield call(callApi, 'get', API_ENDPOINT, `/teams/${action.payload}`)
-//     const players = yield call(callApi, 'get', API_ENDPOINT, `/teams/${action.payload}/players`)
-
-//     if (detail.error || players.error) {
-//       yield put(fetchError(detail.error || players.error))
-//     } else {
-//       yield put(teamSelected({ detail, players }))
-//     }
-//   } catch (err) {
-//     if (err instanceof Error) {
-//       yield put(fetchError(err.stack!))
-//     } else {
-//       yield put(fetchError('An unknown error occured.'))
-//     }
-//   }
-// }
 
 // This is our watcher function. We use `take*()` functions to watch Redux for a specific action
 // type, and run our saga, for example the `handleFetch()` saga above.

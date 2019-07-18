@@ -1,12 +1,19 @@
 import React from 'react'
 import styled from 'styled-components';
 import requests from '../requests/loginRequests'
+import jwt from 'jwt-decode';
+
 type MyProps = { email: string, password: string };
 
 type MyState = { email: string, password: string };
 
-
-
+export interface User {
+    email: string
+    password: string
+    telephone: string
+    age: number
+    img: string
+}
 
 export class LoginComponent extends React.Component<MyProps, MyState, History> {
 
@@ -18,10 +25,20 @@ export class LoginComponent extends React.Component<MyProps, MyState, History> {
         };
     }
 
+    decodeToLocalStorage = (data:any) => {
+        const decode: User = jwt(data.token);
+        localStorage.token = data.token;
+        localStorage.email = decode.email;
+        localStorage.telephone = decode.telephone;
+        localStorage.age = decode.age;
+        localStorage.img = data.img;
+    }
+
     onSubmit = (event:any) => {
         event.preventDefault();
         // window.location.href = '/';
-        requests.auth(this.state).then(x => console.log(x));
+        requests.auth(this.state).then(data => data.json())
+        .then(res => this.decodeToLocalStorage(res));
         //history.push('register')
     };
     
@@ -61,9 +78,7 @@ export class LoginComponent extends React.Component<MyProps, MyState, History> {
                         <div>
                             <button disabled={!this.validateForm()} type="submit">
                                 Login
-                                
                             </button>
-                           
                         </div>
                     </form>
                 </div>

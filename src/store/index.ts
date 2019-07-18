@@ -9,14 +9,18 @@ import heroesSaga from './Books/sagas'
 import { BooksReducer } from './Books/reducer'
 import { BooksState } from './Books/types'
 import registerSaga from './register/sagas'
+import counterSaga from './CartCounter/sagas'
 import { RegisterState } from './register/types'
 import { registerReducer } from './register/reducer'
+import { counterReducer } from './CartCounter/reducer';
+import { CounterState } from './CartCounter/types';
+
 
 export interface ApplicationState {
-    layout: LayoutState
-    books: BooksState
-    register: RegisterState
-    router: RouterState
+    counter: CounterState;
+    books: BooksState;
+    register: RegisterState;
+    router: RouterState;
 }
 
 export interface ConnectedReduxProps<A extends Action = AnyAction> {
@@ -25,12 +29,12 @@ export interface ConnectedReduxProps<A extends Action = AnyAction> {
 
 export const createRootReducer = (history: History) =>
     combineReducers({
-        layout: layoutReducer,
+        counter: counterReducer,
         books: BooksReducer,
         register: registerReducer,
         router: connectRouter(history)
     })
 
 export function* rootSaga() {
-    yield all([fork(heroesSaga), fork(registerSaga)])
+    yield all([fork(heroesSaga), fork(registerSaga), fork(counterSaga)])
 }

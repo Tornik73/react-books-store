@@ -2,17 +2,18 @@ import * as React from 'react'
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom'
 import { css } from 'emotion'
-interface HeaderProps {
-    title: string
-    count: number
-}
+import { ApplicationState } from '../../store';
+import { connect } from 'react-redux';
 
-class Header extends React.Component<HeaderProps> {
+type Props = {count: number}
+
+class Header extends React.Component<Props> {
 
     render(){
+        const {count} = this.props
         return(
         <Wrapper>
-            <h2>{this.props.title}</h2>
+            <h2></h2>
             <HeaderNav>
                 <HeaderNavLink exact to="/" activeClassName={HeaderLinkActive}>
                     Home
@@ -23,14 +24,23 @@ class Header extends React.Component<HeaderProps> {
                 <HeaderNavLink to="/register" activeClassName={HeaderLinkActive}>
                     Register
                 </HeaderNavLink>
+                <HeaderNavLink to="/profile" activeClassName={HeaderLinkActive}>
+                    Profile
+                </HeaderNavLink>
             </HeaderNav>
-            <Cart>Cart items: <CartItems>{this.props.count}</CartItems></Cart>
+                <Cart>Cart items: <CartCounter>{count}</CartCounter></Cart>
         </Wrapper>
         )
     }
 }
 
-export default Header
+const mapStateToProps = ({ counter }: ApplicationState) => ({
+    count: counter.count
+})
+
+export default connect(
+    mapStateToProps
+)(Header)
 
 const Cart = styled('div')`
     display: flex;
@@ -38,7 +48,7 @@ const Cart = styled('div')`
     align-items: center;
 `
 
-const CartItems = styled('div')`
+const CartCounter = styled('div')`
     padding: 5px 2px;
     border: 2px solid red;
     border-radius: 50px;
