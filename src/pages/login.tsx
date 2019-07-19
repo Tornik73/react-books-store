@@ -8,6 +8,7 @@ type MyProps = { email: string, password: string };
 type MyState = { email: string, password: string };
 
 export interface User {
+    id: number
     email: string
     password: string
     telephone: string
@@ -15,7 +16,11 @@ export interface User {
     img: string
 }
 
-export class LoginComponent extends React.Component<MyProps, MyState, History> {
+
+type AllProps = MyProps;
+
+
+export class LoginComponent extends React.Component<AllProps, MyState, History> {
 
     constructor(props:any) {
         super(props);
@@ -25,8 +30,30 @@ export class LoginComponent extends React.Component<MyProps, MyState, History> {
         };
     }
 
+    componentDidMount(){
+        const NewUser: User ={
+            id: 1,
+            email: "rio@gmail.com",
+            password: "12345678",
+            telephone: "1231234321",
+            age: 18,
+            img: "123432145fasdfgasv"
+        }
+        type U = keyof User;
+
+        function getProperty<T, K extends keyof T>(obj: T, key: K): T[K]{
+            return obj[key];
+        }
+
+
+
+
+        const email = getProperty(NewUser, 'email');
+        
+    }
     decodeToLocalStorage = (data:any) => {
         const decode: User = jwt(data.token);
+        localStorage.id = decode.id;
         localStorage.token = data.token;
         localStorage.email = decode.email;
         localStorage.telephone = decode.telephone;
@@ -45,6 +72,7 @@ export class LoginComponent extends React.Component<MyProps, MyState, History> {
     validateForm() {
         return this.state.email.length > 0 && this.state.password.length > 0;
     }
+
 
     handleChange = (event:any) => this.setState({
         ...this.state,

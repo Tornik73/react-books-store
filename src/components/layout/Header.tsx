@@ -5,15 +5,23 @@ import { css } from 'emotion'
 import { ApplicationState } from '../../store';
 import { connect } from 'react-redux';
 
-type Props = {count: number}
+type Props = { count: number, headerImg: any}
+type State = { headerImg: any}
 
-class Header extends React.Component<Props> {
+class Header extends React.Component<Props, State> {
 
+    constructor (props:any){
+        super(props)
+        this.state = {
+            headerImg: localStorage.img
+        };
+    }
     render(){
-        const {count} = this.props
+        const { count, headerImg } = this.props
+        console.log(this.props);
+        
         return(
         <Wrapper>
-            <h2></h2>
             <HeaderNav>
                 <HeaderNavLink exact to="/" activeClassName={HeaderLinkActive}>
                     Home
@@ -29,18 +37,35 @@ class Header extends React.Component<Props> {
                 </HeaderNavLink>
             </HeaderNav>
                 <Cart>Cart items: <CartCounter>{count}</CartCounter></Cart>
+                <ProfileImage>
+                    {headerImg.img && 
+                        <img src={headerImg.img} alt="" />
+                    }
+                    {!headerImg.img &&
+                        <img src={this.state.headerImg} alt="" />
+                    }
+                </ProfileImage>
         </Wrapper>
         )
     }
 }
 
-const mapStateToProps = ({ counter }: ApplicationState) => ({
-    count: counter.count
+const mapStateToProps = ({ counter, profile }: ApplicationState) => ({
+    count: counter.count,
+    headerImg: profile.data
 })
 
 export default connect(
     mapStateToProps
 )(Header)
+
+const ProfileImage = styled('div')`
+    img {
+        width: 30px;
+        height: 30px;
+    }
+    border: 0px;
+`
 
 const Cart = styled('div')`
     display: flex;
@@ -63,10 +88,10 @@ const Wrapper = styled('header')`
     font-family: Arial;
 `
 
-const Title = styled('h2')`
-    margin: 0;
-    font-weight: 500;
-`
+// const Title = styled('h2')`
+//     margin: 0;
+//     font-weight: 500;
+// `
 
 const HeaderNav = styled('nav')`
     flex: 1 1 auto;

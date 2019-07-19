@@ -1,13 +1,31 @@
 import * as React from 'react'
 import styled from 'styled-components';
+import { ApplicationState, ConnectedReduxProps } from '../store'
+import { PutRequest } from '../store/profile/actions'
+import { connect } from 'react-redux';
+import { Profile } from '../store/profile/types'
 
-type Props = { }
-type State = { file: any, imagePreviewUrl: any, saveMode: boolean }
-export default class Profile extends React.Component<Props, State> {
+type State = { userId: number, file: any, imagePreviewUrl: any, saveMode: boolean }
+
+interface PropsFromState {
+    loading: boolean
+    data: Profile[]
+    errors?: string
+}
+
+interface PropsFromDispatch {
+    PutRequest: typeof PutRequest
+} 
+
+type AllProps = PropsFromState & PropsFromDispatch 
+& ConnectedReduxProps & {email: string, password: string, img : string}
+
+class ProfileComponent extends React.Component<AllProps, State> {
 
     constructor(props: any){
         super(props);
         this.state = {
+            userId: localStorage.id,
             file: localStorage.img,
             imagePreviewUrl: localStorage.img,
             saveMode: false
@@ -36,6 +54,17 @@ export default class Profile extends React.Component<Props, State> {
             saveMode: false
         });
     }
+
+    saveImage = async (e: any) => {
+        // console.log(this.state)
+        e.preventDefault();
+        const putUser: any = { id: this.state.userId, img: this.state.imagePreviewUrl};
+        let response = await this.props.PutRequest(putUser);
+        localStorage.img = response.payload.img;
+        this.setState({
+            saveMode: false
+        })
+    }
     render() {
 
         let { imagePreviewUrl } = this.state;
@@ -51,7 +80,7 @@ export default class Profile extends React.Component<Props, State> {
 
                 {this.state.saveMode &&
                     <div>
-                        <button type="submit">
+                    <button type="submit" onClick={this.saveImage}>
                             Save
                         </button>
                         <button type="submit" onClick={this.disableSaveMode}>
@@ -69,6 +98,21 @@ export default class Profile extends React.Component<Props, State> {
         )
     }
 }
+
+const mapStateToProps = ({ profile }: ApplicationState) => ({
+    loading: profile.loading,
+    errors: profile.errors,
+    data: profile.data
+})
+
+const mapDispatchToProps = {
+    PutRequest
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ProfileComponent)
 
 const Image = styled('div')`
     img{

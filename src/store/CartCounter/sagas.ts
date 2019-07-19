@@ -1,7 +1,5 @@
-import { all, call, fork, put, takeEvery } from 'redux-saga/effects'
+import { all, fork, put, takeEvery } from 'redux-saga/effects'
 import { AddToCart } from './actions'
-import { callApi } from '../../utils/api'
-import { url } from '../../constants/constants'
 import {CounterActionTypes} from './types'
 
 
