@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components';
 import { ApplicationState, ConnectedReduxProps } from '../store'
-import { PutRequest } from '../store/profile/actions'
+import { putRequest } from '../store/profile/actions'
 import { connect } from 'react-redux';
 import { Profile } from '../store/profile/types'
 
@@ -14,7 +14,7 @@ interface PropsFromState {
 }
 
 interface PropsFromDispatch {
-    PutRequest: typeof PutRequest
+    putRequest: typeof putRequest
 } 
 
 type AllProps = PropsFromState & PropsFromDispatch 
@@ -59,7 +59,7 @@ class ProfileComponent extends React.Component<AllProps, State> {
         // console.log(this.state)
         e.preventDefault();
         const putUser: any = { id: this.state.userId, img: this.state.imagePreviewUrl};
-        let response = await this.props.PutRequest(putUser);
+        let response = await this.props.putRequest(putUser);
         localStorage.img = response.payload.img;
         this.setState({
             saveMode: false
@@ -72,7 +72,7 @@ class ProfileComponent extends React.Component<AllProps, State> {
         return (
             <ProfileContent>
                 <h2>Profile Page</h2>
-                <Image><img src={imagePreviewUrl} alt="profile image"/></Image>
+                <ProfileImage><img src={imagePreviewUrl} alt="profileImage" /></ProfileImage>
                 <div><input type="file" onChange={this.handleImageChange}/></div>
                 <div>Email: {localStorage.email}</div>
                 <div>Telephone: {localStorage.telephone}</div>
@@ -106,7 +106,7 @@ const mapStateToProps = ({ profile }: ApplicationState) => ({
 })
 
 const mapDispatchToProps = {
-    PutRequest
+    putRequest
 }
 
 export default connect(
@@ -114,7 +114,7 @@ export default connect(
     mapDispatchToProps
 )(ProfileComponent)
 
-const Image = styled('div')`
+const ProfileImage = styled('div')`
     img{
         width: 200px;
         height: 200px;

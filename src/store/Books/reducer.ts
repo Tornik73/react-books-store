@@ -29,4 +29,4 @@ const reducer: Reducer<BooksState> = (state = initialState, action) => {
 
 // Instead of using default export, we use named exports. That way we can group these exports
 // inside the `index.js` folder.
-export { reducer as BooksReducer }
+export { reducer as booksReducer }

@@ -5,9 +5,9 @@ export interface Profile {
 }
 
 export enum ProfileActionTypes {
-  FETCH_REQUEST = '@@profile/PUT_REQUEST',
-  FETCH_SUCCESS = '@@profile/PUT_SUCCESS',
-  FETCH_ERROR = '@@profile/PUT_ERROR',
+  PUT_REQUEST = '@@profile/PUT_REQUEST',
+  PUT_SUCCESS = '@@profile/PUT_SUCCESS',
+  PUT_ERROR = '@@profile/PUT_ERROR',
 }
 
 export interface ProfileState {

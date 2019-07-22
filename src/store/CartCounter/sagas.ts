@@ -2,8 +2,7 @@ import { all, fork, put, takeEvery } from 'redux-saga/effects'
 import { AddToCart } from './actions'
 import {CounterActionTypes} from './types'
 
-
-function* handleCounter(data: any) {
+function* handleCounter() {
     yield put(AddToCart())
 
 }

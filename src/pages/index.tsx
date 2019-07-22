@@ -1,6 +1,4 @@
 import * as React from 'react'
-// import Page from '../components/layout/Page'
-// import Container from '../components/layout/Container'
 
 import styled from 'styled-components';
 import { ApplicationState, ConnectedReduxProps } from '../store';
@@ -8,8 +6,9 @@ import { fetchRequest } from '../store/Books/actions';
 import { Books } from '../store/Books/types'
 import { connect } from 'react-redux';
 import { AddToCart } from '../store/CartCounter/actions'
+import { User } from '../store/register/types';
 
-type State = { email: string, password: string, telephone: string, age: string, img: string, count: number };
+type State = Books;
 
 interface PropsFromState {
   loading: boolean
@@ -22,7 +21,7 @@ interface PropsFromDispatch {
   AddToCart: typeof AddToCart
 }
 
-type AllProps = PropsFromState & PropsFromDispatch & ConnectedReduxProps & { email: string, password: string }
+type AllProps = PropsFromState & PropsFromDispatch & ConnectedReduxProps & User
 
 class MainComponent extends React.Component<AllProps, State> {
 

@@ -1,7 +1,7 @@
 import { action } from 'typesafe-actions'
 import { ProfileActionTypes, Profile } from './types'
 
-export const PutRequest = (data: Profile) => action(ProfileActionTypes.FETCH_REQUEST, data)
+export const putRequest = (data: Profile) => action(ProfileActionTypes.PUT_REQUEST, data)
 
-export const fetchSuccess = (data: Profile) => action(ProfileActionTypes.FETCH_SUCCESS, data)
-export const fetchError = (message: string) => action(ProfileActionTypes.FETCH_ERROR, message)
+export const putSuccess = (data: Profile) => action(ProfileActionTypes.PUT_SUCCESS, data)
+export const putError = (message: string) => action(ProfileActionTypes.PUT_ERROR, message)

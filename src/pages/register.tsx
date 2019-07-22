@@ -4,8 +4,9 @@ import { connect } from 'react-redux'
 import { fetchRequest } from '../store/register/actions'
 import { ApplicationState, ConnectedReduxProps } from '../store'
 import { Register } from '../store/register/types'
+import { RegisterUser } from '../models/user'
 
-type State = { email: string, password: string, telephone: string, age: string, img: string };
+type State = RegisterUser;
 
 interface PropsFromState {
     loading: boolean
@@ -17,19 +18,19 @@ interface PropsFromDispatch {
     fetchRequest: typeof fetchRequest
 }
 
-type AllProps = PropsFromState & PropsFromDispatch & ConnectedReduxProps & { email: string, password: string }
+type AllProps = PropsFromState & PropsFromDispatch & ConnectedReduxProps & RegisterUser
 
 class RegisterComponent extends React.Component<AllProps, State> {
 
 
-    constructor(props: any) {
+    constructor(props: AllProps) {
         super(props);
         this.state = {
             email: '',
             password: '',
             telephone: '',
-            age: '',
-            img: '123'
+            age: 0,
+            img: 'Default:Image'
         };
     }
 
@@ -37,10 +38,12 @@ class RegisterComponent extends React.Component<AllProps, State> {
         this.setState({ [event.target.name]: event.target.value } as any);
 
     validateForm() {
-        return this.state.email.length > 0 && this.state.password.length > 0 && this.state.telephone.length & this.state.age.length;
+        return this.state.email.length > 0 && this.state.password.length > 0 && this.state.telephone.length & this.state.age.toString().length;
     }
 
     register = () => {
+        console.log(this.state);
+        
         this.props.fetchRequest(this.state);
     };
 
@@ -81,7 +84,7 @@ class RegisterComponent extends React.Component<AllProps, State> {
                         type="age"
                         name="age"
                         placeholder="Age"
-                        value={this.state.age}
+                        value={this.state.age ? this.state.age : ''}
                         onChange={this.handle}
                     />
                 </div>

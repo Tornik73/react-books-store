@@ -4,11 +4,23 @@ import { NavLink } from 'react-router-dom'
 import { css } from 'emotion'
 import { ApplicationState } from '../../store';
 import { connect } from 'react-redux';
+import { LogOut } from '../../store/logout/actions';
+// type Props = { count: number, headerImg: any}
+// type State = { headerImg: any}
 
-type Props = { count: number, headerImg: any}
-type State = { headerImg: any}
+interface PropsFromDispatch {
+    LogOut: typeof LogOut
+}
+interface PropsFromState {
+    authStatus: boolean
+    headerImg: any,
+    count: number
+}
 
-class Header extends React.Component<Props, State> {
+type AllProps = PropsFromState & PropsFromDispatch 
+
+
+class Header extends React.Component<AllProps> {
 
     constructor (props:any){
         super(props)
@@ -16,9 +28,18 @@ class Header extends React.Component<Props, State> {
             headerImg: localStorage.img
         };
     }
+
+    logOut= () => {
+        
+        this.props.LogOut();
+        localStorage.clear();
+        this.setState({
+            headerImg: ''
+        })
+        
+    }
     render(){
-        const { count, headerImg } = this.props
-        console.log(this.props);
+        const { count, headerImg, authStatus } = this.props
         
         return(
         <Wrapper>
@@ -26,15 +47,26 @@ class Header extends React.Component<Props, State> {
                 <HeaderNavLink exact to="/" activeClassName={HeaderLinkActive}>
                     Home
                 </HeaderNavLink>
+
+                {authStatus && 
                 <HeaderNavLink to="/login" activeClassName={HeaderLinkActive}>
                     Log in
-                </HeaderNavLink>
-                <HeaderNavLink to="/register" activeClassName={HeaderLinkActive}>
+                </HeaderNavLink>}
+
+                {authStatus && 
+                    <HeaderNavLink to="/register" activeClassName={HeaderLinkActive}>
                     Register
-                </HeaderNavLink>
+                </HeaderNavLink>}
+
+                {!authStatus && 
+                    <HeaderNavLink to="/" onClick={this.logOut}  >
+                    Log out
+                </HeaderNavLink>}
+                
+                {!authStatus && 
                 <HeaderNavLink to="/profile" activeClassName={HeaderLinkActive}>
                     Profile
-                </HeaderNavLink>
+                </HeaderNavLink>}
             </HeaderNav>
                 <Cart>Cart items: <CartCounter>{count}</CartCounter></Cart>
                 <ProfileImage>
@@ -50,13 +82,18 @@ class Header extends React.Component<Props, State> {
     }
 }
 
-const mapStateToProps = ({ counter, profile }: ApplicationState) => ({
+const mapStateToProps = ({ counter, profile, auth }: ApplicationState) => ({
     count: counter.count,
-    headerImg: profile.data
+    headerImg: profile.data,
+    authStatus: auth.authStatus
 })
 
+const mapDispatchToProps = {
+    LogOut
+}
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(Header)
 
 const ProfileImage = styled('div')`
@@ -87,11 +124,6 @@ const Wrapper = styled('header')`
     color: #fff;
     font-family: Arial;
 `
-
-// const Title = styled('h2')`
-//     margin: 0;
-//     font-weight: 500;
-// `
 
 const HeaderNav = styled('nav')`
     flex: 1 1 auto;

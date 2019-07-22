@@ -10,10 +10,10 @@ export const initialState: ProfileState = {
 const reducer: Reducer<ProfileState> = (state = initialState, action) => {
   switch (action.type) {
  
-    case ProfileActionTypes.FETCH_REQUEST: {
+    case ProfileActionTypes.PUT_REQUEST: {
       return { ...state, loading: false, data: action.payload }
     }
-    case ProfileActionTypes.FETCH_ERROR: {
+    case ProfileActionTypes.PUT_ERROR: {
       return { ...state, loading: false, errors: action.payload }
     }
     default: {

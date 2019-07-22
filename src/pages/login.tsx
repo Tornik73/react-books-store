@@ -2,27 +2,15 @@ import React from 'react'
 import styled from 'styled-components';
 import requests from '../requests/loginRequests'
 import jwt from 'jwt-decode';
+import  { User }  from '../store/register/types'
+import { LoginUser } from '../models/login'
 
-type MyProps = { email: string, password: string };
+type UserProps = LoginUser;
+type UserState = LoginUser;
 
-type MyState = { email: string, password: string };
+export class LoginComponent extends React.Component<UserProps, UserState, History> {
 
-export interface User {
-    id: number
-    email: string
-    password: string
-    telephone: string
-    age: number
-    img: string
-}
-
-
-type AllProps = MyProps;
-
-
-export class LoginComponent extends React.Component<AllProps, MyState, History> {
-
-    constructor(props:any) {
+    constructor(props: LoginUser) {
         super(props);
         this.state = {
             email: '',
@@ -30,51 +18,46 @@ export class LoginComponent extends React.Component<AllProps, MyState, History> 
         };
     }
 
-    componentDidMount(){
-        const NewUser: User ={
-            id: 1,
-            email: "rio@gmail.com",
-            password: "12345678",
-            telephone: "1231234321",
-            age: 18,
-            img: "123432145fasdfgasv"
-        }
-        type U = keyof User;
+    // componentDidMount(){
+    //     const NewUser: User ={
+    //         id: 1,
+    //         email: "rio@gmail.com",
+    //         password: "12345678",
+    //         telephone: "1231234321",
+    //         age: 18,
+    //         img: "123432145fasdfgasv"
+    //     }
+    //     function getProperty<T, K extends keyof T>(obj: T, key: K): T[K]{
+    //         return obj[key];
+    //     }
+    //     const age = getProperty(NewUser, 'age');
+    // }
 
-        function getProperty<T, K extends keyof T>(obj: T, key: K): T[K]{
-            return obj[key];
-        }
-
-
-
-
-        const email = getProperty(NewUser, 'email');
-        
-    }
-    decodeToLocalStorage = (data:any) => {
-        const decode: User = jwt(data.token);
+    decodeToLocalStorage = (loginUserData: User) : void => {
+        const decode: User = jwt(loginUserData.token);
         localStorage.id = decode.id;
-        localStorage.token = data.token;
+        localStorage.token = loginUserData.token;
         localStorage.email = decode.email;
         localStorage.telephone = decode.telephone;
         localStorage.age = decode.age;
-        localStorage.img = data.img;
+        localStorage.img = loginUserData.img;
     }
 
-    onSubmit = (event:any) => {
+    onSubmit = (event: any): void => {
         event.preventDefault();
-        // window.location.href = '/';
-        requests.auth(this.state).then(data => data.json())
-        .then(res => this.decodeToLocalStorage(res));
-        //history.push('register')
+        requests.auth(this.state)
+            .then((loginUserData: Response) => loginUserData.json())
+            .then((User: User) => this.decodeToLocalStorage(User))
+                .then(() => window.location.href = '/');
+
     };
     
-    validateForm() {
+    validateForm() : boolean {
         return this.state.email.length > 0 && this.state.password.length > 0;
     }
 
 
-    handleChange = (event:any) => this.setState({
+    handleChange = (event: any): void => this.setState({
         ...this.state,
         [event.target.name]: event.target.value
     });

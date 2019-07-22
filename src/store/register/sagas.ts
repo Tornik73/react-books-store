@@ -3,10 +3,10 @@ import { RegisterActionTypes } from './types'
 import { fetchError, fetchSuccess} from './actions'
 import { callApi } from '../../utils/api'
 import { url } from '../../constants/constants'
+// import { RegisterRepsonse } from '../register/types';
 
 function* handleFetch(data: any) {
   try {
-    // To call async functions, use redux-saga's `call()`.
     const res = yield call(callApi, 'post', url, 'register', data.payload)
 
     if (res.error) {
@@ -23,18 +23,10 @@ function* handleFetch(data: any) {
   }
 }
 
-
-// This is our watcher function. We use `take*()` functions to watch Redux for a specific action
-// type, and run our saga, for example the `handleFetch()` saga above.
 function* watchFetchRequest() {
   yield takeEvery(RegisterActionTypes.FETCH_REQUEST, handleFetch)
 }
 
-// function* watchSelectTeam() {
-//   yield takeLatest(TeamsActionTypes.SELECT_TEAM, handleSelect)
-// }
-
-// We can also use `fork()` here to split our saga into multiple watchers.
 function* heroesSaga() {
   yield all([fork(watchFetchRequest)])
 }
